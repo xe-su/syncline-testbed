@@ -9,8 +9,9 @@ const router = Router()
 router.post('/token', async (req, res) => {
   try {
     const { client_id, tenant_id } = req.body as { client_id?: string; tenant_id?: string }
-    const clientId = client_id ?? uuidv4()
-    const tenantId = tenant_id ?? '00000000-0000-0000-0000-000000000001'
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    const clientId = (client_id && uuidRegex.test(client_id)) ? client_id : uuidv4()
+    const tenantId = (tenant_id && uuidRegex.test(tenant_id)) ? tenant_id : '00000000-0000-0000-0000-000000000001'
 
     // Upsert client
     await query(

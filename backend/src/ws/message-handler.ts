@@ -29,17 +29,20 @@ export async function handleMessage(ws: WebSocket, raw: string, clientId: string
 
   if (msg.type === 'CHANGE') {
     const change = msg.change as ChangeRecord
-    if (!change?.id || !change?.table_name || !change?.operation) return
+    // SDK uses `table` + `timestamp`; DB column is `table_name` + `hlc_ts`
+    const tableName = (change.table_name ?? change.table) as string | undefined
+    const hlcTs = (change.hlc_ts ?? change.timestamp ?? Date.now()) as number
+    if (!change?.id || !tableName || !change?.operation) return
 
     const saved = await saveChange({
       id: change.id,
       tenant_id: tenantId,
       client_id: clientId,
-      table_name: change.table_name,
-      row_id: change.row_id,
-      operation: change.operation,
-      payload: change.payload ?? null,
-      hlc_ts: change.hlc_ts ?? Date.now()
+      table_name: tableName,
+      row_id: change.row_id as string,
+      operation: change.operation as 'INSERT' | 'UPDATE' | 'DELETE',
+      payload: (change.payload ?? null) as Record<string, unknown> | null,
+      hlc_ts: hlcTs
     })
 
     if (saved.seq > 0) {

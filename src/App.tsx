@@ -7,6 +7,7 @@ import ConflictInbox from './pages/ConflictInbox'
 import MigrationLog from './pages/MigrationLog'
 import SyncDebugger from './pages/SyncDebugger'
 import { SyncStatusBadge } from './components/SyncStatusBadge'
+import { SyncLineProvider } from './components/SyncLineProvider'
 
 const nav = [
   { path: '/', label: 'Dashboard' },
@@ -20,6 +21,7 @@ const nav = [
 
 export default function App() {
   return (
+    <SyncLineProvider>
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
@@ -51,5 +53,6 @@ export default function App() {
         </div>
       </div>
     </BrowserRouter>
+    </SyncLineProvider>
   )
 }

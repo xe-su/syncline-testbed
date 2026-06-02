@@ -22,7 +22,7 @@ const nav = [
 export default function App() {
   return (
     <SyncLineProvider>
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
           <span className="font-bold text-lg text-gray-900">SyncLine Testbed</span>
